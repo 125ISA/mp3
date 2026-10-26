@@ -67,6 +67,16 @@ module.exports=function(router) {
                 });
             }
 
+            if (req.query.count == "true") {
+                var total = await Task.countDocuments(where);
+
+                return res.status(200).json ({
+                    message:"success",
+                    data: total
+                });
+
+            }
+
             var tasks = await Task.find(where).sort(sort).select(select).skip(skip).limit(limit);
 
 
@@ -305,6 +315,14 @@ module.exports=function(router) {
                         data: null
                     });
                 }
+
+                if (req.body.assignedUserName != null && req.body.assignedUserName != user.name) {
+                   return res.status(400).json({
+                       message: "Invalid user name",
+                       data: null
+                    });
+                }
+
             }
 
             task.name = name;
